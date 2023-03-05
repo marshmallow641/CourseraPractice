@@ -176,6 +176,22 @@ class UserLogCounter():
         log_result  = re.search(log, line)
         user_result = re.search(user, line)
 
+    def sorted_user_log_count(self):
+        sorted_dict = sorted(self.user_log_count_dict.items(), key=operator.itemgetter(0))
+        #sorted_dict.insert(0,{"Error": "Count"})
+        return sorted_dict
+
+    def generate_csv(self):
+        with open("error_message.csv", "w", newline="") as csvfile:
+            sorted_dict = sorted(self.user_log_count_dict.items(), key=operator.itemgetter(0))
+            columns = ["Username", "INFO", "ERROR"]
+            writer = csv.writer(csvfile)
+
+            writer.writerow(columns)
+            writer.writerows(sorted_dict)
+
+            csvfile.close()
+
 if __name__ == "__main__":
     '''error_modified_count = 0
     error_permission_denied_count = 0
