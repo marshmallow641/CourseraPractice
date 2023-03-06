@@ -12,7 +12,7 @@ class ErrorCounter():
     error_failed_db_connection_count  : int
 
     # First part of the RegEx expression for all error messages
-    date_time_host_application = r"(\w+ \d \d+:\d+:\d+ [a-z\.]+ [a-z:]+ ERROR "
+    date_time_host_application = r"(\w+ \d \d+:\d+:\d+ [a-z\.]+ [a-z:]+ ERROR )"
 
     # Dictionary that will store the error messages with their respective counts
     error_count_dict: dict
@@ -30,12 +30,12 @@ class ErrorCounter():
     # Searches line to check if it is reporting an error or not
     def count_errors(self, line, count=0):
         # RegEx strings
-        error_modified              = self.date_time_host_application + r"The ticket was modified while updating)"        # Log Example: Jul 6 14:01:23 ubuntu.local ticky: ERROR The ticket was modified while updating (<user>)
-        error_permission_denied     = self.date_time_host_application + r"Permission denied while closing the ticket)"    # Log Example: Jul 6 14:01:23 ubuntu.local ticky: ERROR Permission denied while closing the ticket (<user>)
-        error_closed_ticket         = self.date_time_host_application + r"Tried to add information to closed ticket)"     # Log Example: Jul 6 14:01:23 ubuntu.local ticky: ERROR Tried to add information to closed ticket (<user>)
-        error_timeout               = self.date_time_host_application + r"Timeout while retieving information)"           # Log Example: Jul 6 14:01:23 ubuntu.local ticky: ERROR Timeout while retieving information (<user>)
-        error_ticket_does_not_exist = self.date_time_host_application + r"Ticket doesn't exist)"                          # Log Example: Jul 6 14:01:23 ubuntu.local ticky: ERROR Ticket doesn't exist (<user>)
-        error_failed_db_connection  = self.date_time_host_application + r"Connection to DB failed)"                       # Log Example: Jul 6 14:01:23 ubuntu.local ticky: ERROR Ticket doesn't exist (<user>)
+        error_modified              = self.date_time_host_application + r"(The ticket was modified while updating)"        # Log Example: Jul 6 14:01:23 ubuntu.local ticky: ERROR The ticket was modified while updating (<user>)
+        error_permission_denied     = self.date_time_host_application + r"(Permission denied while closing the ticket)"    # Log Example: Jul 6 14:01:23 ubuntu.local ticky: ERROR Permission denied while closing the ticket (<user>)
+        error_closed_ticket         = self.date_time_host_application + r"(Tried to add information to closed ticket)"     # Log Example: Jul 6 14:01:23 ubuntu.local ticky: ERROR Tried to add information to closed ticket (<user>)
+        error_timeout               = self.date_time_host_application + r"(Timeout while retieving information)"           # Log Example: Jul 6 14:01:23 ubuntu.local ticky: ERROR Timeout while retieving information (<user>)
+        error_ticket_does_not_exist = self.date_time_host_application + r"(Ticket doesn't exist)"                          # Log Example: Jul 6 14:01:23 ubuntu.local ticky: ERROR Ticket doesn't exist (<user>)
+        error_failed_db_connection  = self.date_time_host_application + r"(Connection to DB failed)"                       # Log Example: Jul 6 14:01:23 ubuntu.local ticky: ERROR Ticket doesn't exist (<user>)
 
         # Extra regex patterns
         error_log_pattern        = r"(ERROR.*)"
@@ -170,18 +170,18 @@ class UserLogCounter():
     def count_logs(self, line, count=0):
 
         # RegEx pattern for log entries
-        log = r"(\w+ \d \d+:\d+:\d+ [a-z\.]+ [a-z:]+ [A-Z]+)"
-        user = r"(\w+ \d \d+:\d+:\d+ [a-z\.]+ [a-z:]+ [A-Z]+) (\w+) \(\w+\)"
+        date_host_application = r"(\w+ \d \d+:\d+:\d+ [a-z\.]+ [a-z:]+ )"
+        info_log = date_host_application + "(INFO)"
+        error_log = date_host_application + "(ERROR)"
 
-        log_result  = re.search(log, line)
+        user = date_host_application + "([A-Z]+) (\w+) \(\w+\)"
+
+        info_log_result  = re.search(info_log, line)
+        error_log_result = re.search(error_log, line)
+
         user_result = re.search(user, line)
 
 if __name__ == "__main__":
-    '''error_modified_count = 0
-    error_permission_denied_count = 0
-    error_closed_ticket = 0
-    error_timeout = 0
-    error_ticket_does_not_exist = 0'''
 
     error_counter = ErrorCounter()
 
