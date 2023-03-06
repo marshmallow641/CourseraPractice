@@ -28,7 +28,7 @@ class ErrorCounter():
         self.error_count_dict = {}
 
     # Searches line to check if it is reporting an error or not
-    def count_errors(self, line, count=0):
+    def count_errors(self, line):
         # RegEx strings
         error_modified              = self.date_time_host_application + r"The ticket was modified while updating)"        # Log Example: Jul 6 14:01:23 ubuntu.local ticky: ERROR The ticket was modified while updating (<user>)
         error_permission_denied     = self.date_time_host_application + r"Permission denied while closing the ticket)"    # Log Example: Jul 6 14:01:23 ubuntu.local ticky: ERROR Permission denied while closing the ticket (<user>)
@@ -44,12 +44,12 @@ class ErrorCounter():
         application_name_pattern = r"(\s[a-z:]+\s)"
 
         # Message to use in the dictionary
-        error_modified_message              = "ERROR The ticket was modified while updating"
-        error_permission_denied_message     = "ERROR Permission denied while closing the ticket"
-        error_closed_ticket_message         = "ERROR Tried to add information to closed ticket"
-        error_timeout_message               = "ERROR Timeout while retieving information"
-        error_ticket_does_not_exist_message = "ERROR Ticket doesn't exist"
-        error_failed_connection_message     = "ERROR Connection to DB failed"
+        error_modified_message              = "The ticket was modified while updating"
+        error_permission_denied_message     = "Permission denied while closing the ticket"
+        error_closed_ticket_message         = "Tried to add information to closed ticket"
+        error_timeout_message               = "Timeout while retrieving information"
+        error_ticket_does_not_exist_message = "Ticket doesn't exist"
+        error_failed_connection_message     = "Connection to DB failed"
 
         # Results for each error message
         result_modified              = re.search(error_modified, line)
@@ -72,7 +72,7 @@ class ErrorCounter():
             self.error_count_dict[error_ticket_does_not_exist_message] = self.error_ticket_does_not_exist_count
             self.error_count_dict[error_failed_connection_message] = self.error_failed_db_connection_count
 
-            return f"Found: {result_modified.group()}\nTicket Modified While Updating Count: {self.error_count_dict[error_modified_message]}"
+            return f"Found: {matched_string}\nTicket Modified While Updating Count: {self.error_count_dict[error_modified_message]}"
 
         elif result_permission_denied != None:
             matched_string = result_permission_denied.group()
@@ -86,7 +86,7 @@ class ErrorCounter():
             self.error_count_dict[error_ticket_does_not_exist_message] = self.error_ticket_does_not_exist_count
             self.error_count_dict[error_failed_connection_message] = self.error_failed_db_connection_count
 
-            return f"Found: {result_permission_denied.group()}\nPermission denied while closing the ticket Count: {self.error_count_dict[error_permission_denied_message]}"
+            return f"Found: {matched_string}\nPermission denied while closing the ticket Count: {self.error_count_dict[error_permission_denied_message]}"
 
         elif result_closed_ticket != None:
             matched_string = result_closed_ticket.group()
@@ -100,7 +100,7 @@ class ErrorCounter():
             self.error_count_dict[error_ticket_does_not_exist_message] = self.error_ticket_does_not_exist_count
             self.error_count_dict[error_failed_connection_message] = self.error_failed_db_connection_count
 
-            return f"Found: {result_closed_ticket.group()}\nTried to add information to closed ticket Count: {self.error_count_dict[error_closed_ticket_message]}"
+            return f"Found: {matched_string}\nTried to add information to closed ticket Count: {self.error_count_dict[error_closed_ticket_message]}"
 
         elif result_timeout != None:
             matched_string = result_timeout.group()
@@ -114,7 +114,7 @@ class ErrorCounter():
             self.error_count_dict[error_ticket_does_not_exist_message] = self.error_ticket_does_not_exist_count
             self.error_count_dict[error_failed_connection_message] = self.error_failed_db_connection_count
 
-            return f"Found: {result_timeout.group()}\nTimeout while retieving information Count: {self.error_count_dict[error_timeout_message]}"
+            return f"Found: {matched_string}\nTimeout while retieving information Count: {self.error_count_dict[error_timeout_message]}"
 
         elif result_ticket_does_not_exist != None:
             matched_string = result_ticket_does_not_exist.group()
@@ -128,7 +128,7 @@ class ErrorCounter():
             self.error_count_dict[error_ticket_does_not_exist_message] = self.error_ticket_does_not_exist_count
             self.error_count_dict[error_failed_connection_message] = self.error_failed_db_connection_count
 
-            return f"Found: {result_ticket_does_not_exist.group()}\nTicket doesn't exist Count: {self.error_count_dict[error_ticket_does_not_exist_message]}"
+            return f"Found: {matched_string}\nTicket doesn't exist Count: {self.error_count_dict[error_ticket_does_not_exist_message]}"
 
         elif result_failed_db_connection != None:
             matched_string = result_failed_db_connection.group()
@@ -142,7 +142,7 @@ class ErrorCounter():
             self.error_count_dict[error_ticket_does_not_exist_message] = self.error_ticket_does_not_exist_count
             self.error_count_dict[error_failed_connection_message] = self.error_failed_db_connection_count
 
-            return f"Found: {result_failed_db_connection.group()}\nTicket doesn't exist Count: {self.error_count_dict[error_failed_connection_message]}"
+            return f"Found: {matched_string}\nTicket doesn't exist Count: {self.error_count_dict[error_failed_connection_message]}"
 
     def sorted_error_count(self):
         sorted_dict = sorted(self.error_count_dict.items(), key=operator.itemgetter(1))
@@ -167,13 +167,18 @@ class UserLogCounter():
         self.user_log_count_dict = {}
 
     # Searches line to check if it is reporting an error or not
-    def count_logs(self, line, count=0):
+    def count_logs(self, line):
 
         # RegEx pattern for log entries
-        log = r"(\w+ \d \d+:\d+:\d+ [a-z\.]+ [a-z:]+ [A-Z]+)"
-        user = r"(\w+ \d \d+:\d+:\d+ [a-z\.]+ [a-z:]+ [A-Z]+) (\w+) \(\w+\)"
+        date_time_host_application = r"(\w+ \d \d+:\d+:\d+ [a-z\.]+ [a-z:]+ "
+        info_log  = date_time_host_application + r"(INFO)"
+        error_log = date_time_host_application + r"(ERROR)"
 
-        log_result  = re.search(log, line)
+        user = date_time_host_application + r"([A-Z]+) (\w+) \(\w+\)"
+
+        info_log_result  = re.search(info_log, line)
+        error_log_result = re.search(error_log, line)
+
         user_result = re.search(user, line)
 
     def sorted_user_log_count(self):
@@ -200,6 +205,7 @@ if __name__ == "__main__":
     error_ticket_does_not_exist = 0'''
 
     error_counter = ErrorCounter()
+    user_logs = UserLogCounter()
 
     print(error_counter.count_errors("Jul 6 14:01:23 ubuntu.local ticky: ERROR The ticket was modified while updating (user_1)"))      # Jul 6 14:01:23 pid:29440
     print(f"{error_counter.sorted_error_count()}\n")

@@ -1,7 +1,7 @@
 Error,Count
-ERROR Permission denied while closing the ticket,2
-ERROR The ticket was modified while updating,1
-ERROR Tried to add information to closed ticket,1
-ERROR Timeout while retieving information,0
-ERROR Ticket doesn't exist,0
-ERROR Connection to DB failed,0
+Permission denied while closing the ticket,2
+The ticket was modified while updating,1
+Tried to add information to closed ticket,1
+Timeout while retrieving information,0
+Ticket doesn't exist,0
+Connection to DB failed,0

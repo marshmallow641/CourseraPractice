@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3ef1a1ec-f7a2-46e8-a918-ab1208c535a1" name="Changes" comment="">
+    <list default="true" id="3ef1a1ec-f7a2-46e8-a918-ab1208c535a1" name="Changes" comment="Added sorted_user_log_count() and generate_csv() to UserLogCounter class.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/final_project/count_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/final_project/count_errors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/final_project/error_message.csv" beforeDir="false" afterPath="$PROJECT_DIR$/final_project/error_message.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -176,6 +177,18 @@
       <option name="presentableId" value="Default" />
       <updated>1674067287418</updated>
     </task>
+    <task id="LOCAL-00001" summary="Added sorted_user_log_count() and generate_csv() to UserLogCounter class.">
+      <created>1678044434193</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1678044434193</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added sorted_user_log_count() and generate_csv() to UserLogCounter class." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added sorted_user_log_count() and generate_csv() to UserLogCounter class." />
   </component>
 </project>
