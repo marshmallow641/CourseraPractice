@@ -44,12 +44,12 @@ class ErrorCounter():
         application_name_pattern = r"(\s[a-z:]+\s)"
 
         # Message to use in the dictionary
-        error_modified_message              = "ERROR The ticket was modified while updating"
-        error_permission_denied_message     = "ERROR Permission denied while closing the ticket"
-        error_closed_ticket_message         = "ERROR Tried to add information to closed ticket"
-        error_timeout_message               = "ERROR Timeout while retieving information"
-        error_ticket_does_not_exist_message = "ERROR Ticket doesn't exist"
-        error_failed_connection_message     = "ERROR Connection to DB failed"
+        error_modified_message              = "The ticket was modified while updating"
+        error_permission_denied_message     = "Permission denied while closing the ticket"
+        error_closed_ticket_message         = "Tried to add information to closed ticket"
+        error_timeout_message               = "Timeout while retieving information"
+        error_ticket_does_not_exist_message = "Ticket doesn't exist"
+        error_failed_connection_message     = "Connection to DB failed"
 
         # Results for each error message
         result_modified              = re.search(error_modified, line)
@@ -72,7 +72,7 @@ class ErrorCounter():
             self.error_count_dict[error_ticket_does_not_exist_message] = self.error_ticket_does_not_exist_count
             self.error_count_dict[error_failed_connection_message] = self.error_failed_db_connection_count
 
-            return f"Found: {result_modified.group()}\nTicket Modified While Updating Count: {self.error_count_dict[error_modified_message]}"
+            return f"Found: {matched_string}\nTicket Modified While Updating Count: {self.error_count_dict[error_modified_message]}"
 
         elif result_permission_denied != None:
             matched_string = result_permission_denied.group()
@@ -161,31 +161,94 @@ class ErrorCounter():
             csvfile.close()
 
 class UserLogCounter():
-    user_log_count_dict: dict
+    user_log_dict: dict = {}
 
     def __int__(self):
-        self.user_log_count_dict = {}
+        self.user_log_dict = {}
 
     # Searches line to check if it is reporting an error or not
-    def count_logs(self, line, count=0):
+    def count_logs(self, line):
 
         # RegEx pattern for log entries
         date_host_application = r"(\w+ \d \d+:\d+:\d+ [a-z\.]+ [a-z:]+ )"
-        info_log = date_host_application + "(INFO)"
-        error_log = date_host_application + "(ERROR)"
+        info_log = date_host_application + "(INFO).*"
+        error_log = date_host_application + "(ERROR).*"
 
-        user = date_host_application + "([A-Z]+) (\w+) \(\w+\)"
+        # Grabs the username which should be in parentheses
+        user = r"\(\w+\)"
 
         info_log_result  = re.search(info_log, line)
         error_log_result = re.search(error_log, line)
 
         user_result = re.search(user, line)
 
+        print(f"{info_log_result}")
+        print(f"{error_log_result}")
+        #print(f"{username}\n")
+
+        # Removes parentheses from the username
+        username = user_result.group()[1:]
+        username = username[:5]
+
+        '''try:
+            self.user_log_dict[username]["INFO"] = 0
+            self.user_log_dict[username]["ERROR"] = 0
+        except KeyError as k:
+            print(f"{k}")'''
+
+        if user_result != None:
+            # Removes parentheses from the username
+            username = user_result.group()[1:]
+            username = username[:5]
+
+            self.user_log_dict[username] = {}
+            self.user_log_dict[username]["INFO"] = 0
+
+            self.user_log_dict[username] = {}
+            self.user_log_dict[username]["ERROR"] = 0
+            #pass
+        else:
+            print("No user found")
+
+        if info_log_result != None and user_result != None:
+            # Removes parentheses from the username
+            username = user_result.group()[1:]
+            username = username[:5]
+
+            self.user_log_dict[username]["INFO"] += 1
+            #return self.user_log_dict
+            #pass
+
+        elif error_log_result != None and user_result != None:
+            # Removes parentheses from the username
+            username = user_result.group()[1:]
+            username = username[:5]
+
+            self.user_log_dict[username]["ERROR"] += 1
+            #return self.user_log_dict
+            #pass
+
+        def sorted_error_count(self):
+            sorted_dict = sorted(self.user_log_dict.items(), key=operator.itemgetter(0))
+            return sorted_dict
+
+        def generate_csv(self):
+            with open("error_message.csv", "w", newline="") as csvfile:
+                sorted_dict = sorted(self.user_log_dict.items(), key=operator.itemgetter(0))
+                columns = ["Username", "INFO", "ERROR"]
+                writer = csv.writer(csvfile)
+
+                writer.writerow(columns)
+                writer.writerows(sorted_dict)
+
+                csvfile.close()
+
 if __name__ == "__main__":
 
     error_counter = ErrorCounter()
+    user_log_counter = UserLogCounter()
 
-    print(error_counter.count_errors("Jul 6 14:01:23 ubuntu.local ticky: ERROR The ticket was modified while updating (user_1)"))      # Jul 6 14:01:23 pid:29440
+    '''print(error_counter.count_errors("Jul 6 14:01:23 ubuntu.local ticky: ERROR The ticket was modified while updating (user_1)"))      # Jul 6 14:01:23 pid:29440
     print(f"{error_counter.sorted_error_count()}\n")
     print(error_counter.count_errors("Jul 6 14:02:08 computer.name jam_tag=psim[29187]: (UUID:006)"))                         # Jul 6 14:02:08 pid:29187
     print(f"{error_counter.sorted_error_count()}\n")
@@ -200,4 +263,10 @@ if __name__ == "__main__":
     print(error_counter.count_errors("Jul 6 14:05:01 computer.name CRON[29440]: USER (naughty_user)"))                        # Jul 6 14:05:01 pid:29440
     print(f"{error_counter.sorted_error_count()}\n")
 
-    error_counter.generate_csv()
+    error_counter.generate_csv()'''
+
+    print(user_log_counter.count_logs("Jul 6 14:01:23 ubuntu.local ticky: ERROR The ticket was modified while updating (user1)"))  # Jul 6 14:01:23 pid:29440
+    print(user_log_counter.count_logs("Jul 6 14:02:09 ubuntu.local ticky: ERROR Permission denied while closing the ticket (user2)"))  # Jul 6 14:02:09 pid:29187
+    print(user_log_counter.count_logs("Jul 6 14:03:01 ubuntu.local ticky: ERROR Permission denied while closing the ticket (user1)"))  # Jul 6 14:03:01 pid:29440
+    print(user_log_counter.count_logs("Jul 6 14:03:40 computer.name cacheclient: INFO Commented on ticket (user3)"))  # Jul 6 14:03:40 pid:29807
+    print(user_log_counter.count_logs("Jul 6 14:04:01 ubuntu.local ticky: ERROR Tried to add information to closed ticket (user2)"))  # Jul 6 14:04:01 pid:29440
