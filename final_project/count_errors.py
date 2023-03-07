@@ -182,51 +182,45 @@ class UserLogCounter():
 
         user_result = re.search(user, line)
 
-        print(f"{info_log_result}")
-        print(f"{error_log_result}")
+        #print(f"{info_log_result}")
+        #print(f"{error_log_result}")
         #print(f"{username}\n")
-
-        # Removes parentheses from the username
-        username = user_result.group()[1:]
-        username = username[:5]
-
-        '''try:
-            self.user_log_dict[username]["INFO"] = 0
-            self.user_log_dict[username]["ERROR"] = 0
-        except KeyError as k:
-            print(f"{k}")'''
 
         if user_result != None:
             # Removes parentheses from the username
             username = user_result.group()[1:]
             username = username[:5]
 
-            self.user_log_dict[username] = {}
-            self.user_log_dict[username]["INFO"] = 0
 
-            self.user_log_dict[username] = {}
-            self.user_log_dict[username]["ERROR"] = 0
-            #pass
-        else:
-            print("No user found")
+            try:
+                if self.user_log_dict[username]["INFO"] >= 0:
+                    pass
+                elif self.user_log_dict[username]["ERROR"] >= 0:
+                    pass
+                else:
+                    self.user_log_dict[username] = {}
 
-        if info_log_result != None and user_result != None:
-            # Removes parentheses from the username
-            username = user_result.group()[1:]
-            username = username[:5]
+                    self.user_log_dict[username]["INFO"] = 0
+                    self.user_log_dict[username]["ERROR"] = 0
+            except KeyError as k:
+                self.user_log_dict[username] = {}
 
-            self.user_log_dict[username]["INFO"] += 1
-            #return self.user_log_dict
-            #pass
+                self.user_log_dict[username]["INFO"] = 0
+                self.user_log_dict[username]["ERROR"] = 0
 
-        elif error_log_result != None and user_result != None:
-            # Removes parentheses from the username
-            username = user_result.group()[1:]
-            username = username[:5]
+            if info_log_result != None:
+                if self.user_log_dict[username]["INFO"] >= 0:
+                    self.user_log_dict[username]["INFO"] += 1
+                else:
+                    self.user_log_dict[username]["INFO"] = 0
+                return self.user_log_dict
 
-            self.user_log_dict[username]["ERROR"] += 1
-            #return self.user_log_dict
-            #pass
+            elif error_log_result != None:
+                if self.user_log_dict[username]["ERROR"] >= 0:
+                    self.user_log_dict[username]["ERROR"] += 1
+                else:
+                    self.user_log_dict[username]["ERROR"] = 0
+                return self.user_log_dict
 
         def sorted_error_count(self):
             sorted_dict = sorted(self.user_log_dict.items(), key=operator.itemgetter(0))
