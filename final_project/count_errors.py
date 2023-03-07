@@ -1,6 +1,4 @@
-import csv
-import re
-import operator
+from user_log_counts import *
 
 class ErrorCounter():
     # Counters for each error message
@@ -15,7 +13,7 @@ class ErrorCounter():
     date_time_host_application = r"(\w+ \d \d+:\d+:\d+ [a-z\.]+ [a-z:]+ ERROR )"
 
     # Dictionary that will store the error messages with their respective counts
-    error_count_dict: dict
+    error: dict
 
     def __init__(self):
         self.error_modified_count              = 0
@@ -25,10 +23,10 @@ class ErrorCounter():
         self.error_ticket_does_not_exist_count = 0
         self.error_failed_db_connection_count  = 0
 
-        self.error_count_dict = {}
+        self.error = {}
 
     # Searches line to check if it is reporting an error or not
-    def count_errors(self, line, count=0):
+    def count_errors(self, line):
         # RegEx strings
         error_modified              = self.date_time_host_application + r"(The ticket was modified while updating)"        # Log Example: Jul 6 14:01:23 ubuntu.local ticky: ERROR The ticket was modified while updating (<user>)
         error_permission_denied     = self.date_time_host_application + r"(Permission denied while closing the ticket)"    # Log Example: Jul 6 14:01:23 ubuntu.local ticky: ERROR Permission denied while closing the ticket (<user>)
@@ -36,12 +34,6 @@ class ErrorCounter():
         error_timeout               = self.date_time_host_application + r"(Timeout while retieving information)"           # Log Example: Jul 6 14:01:23 ubuntu.local ticky: ERROR Timeout while retieving information (<user>)
         error_ticket_does_not_exist = self.date_time_host_application + r"(Ticket doesn't exist)"                          # Log Example: Jul 6 14:01:23 ubuntu.local ticky: ERROR Ticket doesn't exist (<user>)
         error_failed_db_connection  = self.date_time_host_application + r"(Connection to DB failed)"                       # Log Example: Jul 6 14:01:23 ubuntu.local ticky: ERROR Ticket doesn't exist (<user>)
-
-        # Extra regex patterns
-        error_log_pattern        = r"(ERROR.*)"
-        date_pattern             = r"(\w+ \d \d+:\d+:\d+)"
-        host_pattern             = r"(\s[a-z\.]+\s)"
-        application_name_pattern = r"(\s[a-z:]+\s)"
 
         # Message to use in the dictionary
         error_modified_message              = "The ticket was modified while updating"
@@ -65,93 +57,93 @@ class ErrorCounter():
 
             self.error_modified_count += 1
 
-            self.error_count_dict[error_modified_message] = self.error_modified_count
-            self.error_count_dict[error_permission_denied_message] = self.error_permission_denied_count
-            self.error_count_dict[error_closed_ticket_message] = self.error_closed_ticket_count
-            self.error_count_dict[error_timeout_message] = self.error_timeout_count
-            self.error_count_dict[error_ticket_does_not_exist_message] = self.error_ticket_does_not_exist_count
-            self.error_count_dict[error_failed_connection_message] = self.error_failed_db_connection_count
+            self.error[error_modified_message] = self.error_modified_count
+            self.error[error_permission_denied_message] = self.error_permission_denied_count
+            self.error[error_closed_ticket_message] = self.error_closed_ticket_count
+            self.error[error_timeout_message] = self.error_timeout_count
+            self.error[error_ticket_does_not_exist_message] = self.error_ticket_does_not_exist_count
+            self.error[error_failed_connection_message] = self.error_failed_db_connection_count
 
-            return f"Found: {matched_string}\nTicket Modified While Updating Count: {self.error_count_dict[error_modified_message]}"
+            return f"Found: {matched_string}\nTicket Modified While Updating Count: {self.error[error_modified_message]}"
 
         elif result_permission_denied != None:
             matched_string = result_permission_denied.group()
 
             self.error_permission_denied_count += 1
 
-            self.error_count_dict[error_modified_message] = self.error_modified_count
-            self.error_count_dict[error_permission_denied_message] = self.error_permission_denied_count
-            self.error_count_dict[error_closed_ticket_message] = self.error_closed_ticket_count
-            self.error_count_dict[error_timeout_message] = self.error_timeout_count
-            self.error_count_dict[error_ticket_does_not_exist_message] = self.error_ticket_does_not_exist_count
-            self.error_count_dict[error_failed_connection_message] = self.error_failed_db_connection_count
+            self.error[error_modified_message] = self.error_modified_count
+            self.error[error_permission_denied_message] = self.error_permission_denied_count
+            self.error[error_closed_ticket_message] = self.error_closed_ticket_count
+            self.error[error_timeout_message] = self.error_timeout_count
+            self.error[error_ticket_does_not_exist_message] = self.error_ticket_does_not_exist_count
+            self.error[error_failed_connection_message] = self.error_failed_db_connection_count
 
-            return f"Found: {result_permission_denied.group()}\nPermission denied while closing the ticket Count: {self.error_count_dict[error_permission_denied_message]}"
+            return f"Found: {result_permission_denied.group()}\nPermission denied while closing the ticket Count: {self.error[error_permission_denied_message]}"
 
         elif result_closed_ticket != None:
             matched_string = result_closed_ticket.group()
 
             self.error_closed_ticket_count += 1
 
-            self.error_count_dict[error_modified_message] = self.error_modified_count
-            self.error_count_dict[error_permission_denied_message] = self.error_permission_denied_count
-            self.error_count_dict[error_closed_ticket_message] = self.error_closed_ticket_count
-            self.error_count_dict[error_timeout_message] = self.error_timeout_count
-            self.error_count_dict[error_ticket_does_not_exist_message] = self.error_ticket_does_not_exist_count
-            self.error_count_dict[error_failed_connection_message] = self.error_failed_db_connection_count
+            self.error[error_modified_message] = self.error_modified_count
+            self.error[error_permission_denied_message] = self.error_permission_denied_count
+            self.error[error_closed_ticket_message] = self.error_closed_ticket_count
+            self.error[error_timeout_message] = self.error_timeout_count
+            self.error[error_ticket_does_not_exist_message] = self.error_ticket_does_not_exist_count
+            self.error[error_failed_connection_message] = self.error_failed_db_connection_count
 
-            return f"Found: {result_closed_ticket.group()}\nTried to add information to closed ticket Count: {self.error_count_dict[error_closed_ticket_message]}"
+            return f"Found: {result_closed_ticket.group()}\nTried to add information to closed ticket Count: {self.error[error_closed_ticket_message]}"
 
         elif result_timeout != None:
             matched_string = result_timeout.group()
 
             self.error_timeout_count += 1
 
-            self.error_count_dict[error_modified_message] = self.error_modified_count
-            self.error_count_dict[error_permission_denied_message] = self.error_permission_denied_count
-            self.error_count_dict[error_closed_ticket_message] = self.error_closed_ticket_count
-            self.error_count_dict[error_timeout_message] = self.error_timeout_count
-            self.error_count_dict[error_ticket_does_not_exist_message] = self.error_ticket_does_not_exist_count
-            self.error_count_dict[error_failed_connection_message] = self.error_failed_db_connection_count
+            self.error[error_modified_message] = self.error_modified_count
+            self.error[error_permission_denied_message] = self.error_permission_denied_count
+            self.error[error_closed_ticket_message] = self.error_closed_ticket_count
+            self.error[error_timeout_message] = self.error_timeout_count
+            self.error[error_ticket_does_not_exist_message] = self.error_ticket_does_not_exist_count
+            self.error[error_failed_connection_message] = self.error_failed_db_connection_count
 
-            return f"Found: {result_timeout.group()}\nTimeout while retieving information Count: {self.error_count_dict[error_timeout_message]}"
+            return f"Found: {result_timeout.group()}\nTimeout while retieving information Count: {self.error[error_timeout_message]}"
 
         elif result_ticket_does_not_exist != None:
             matched_string = result_ticket_does_not_exist.group()
 
             self.error_ticket_does_not_exist_count += 1
 
-            self.error_count_dict[error_modified_message] = self.error_modified_count
-            self.error_count_dict[error_permission_denied_message] = self.error_permission_denied_count
-            self.error_count_dict[error_closed_ticket_message] = self.error_closed_ticket_count
-            self.error_count_dict[error_timeout_message] = self.error_timeout_count
-            self.error_count_dict[error_ticket_does_not_exist_message] = self.error_ticket_does_not_exist_count
-            self.error_count_dict[error_failed_connection_message] = self.error_failed_db_connection_count
+            self.error[error_modified_message] = self.error_modified_count
+            self.error[error_permission_denied_message] = self.error_permission_denied_count
+            self.error[error_closed_ticket_message] = self.error_closed_ticket_count
+            self.error[error_timeout_message] = self.error_timeout_count
+            self.error[error_ticket_does_not_exist_message] = self.error_ticket_does_not_exist_count
+            self.error[error_failed_connection_message] = self.error_failed_db_connection_count
 
-            return f"Found: {result_ticket_does_not_exist.group()}\nTicket doesn't exist Count: {self.error_count_dict[error_ticket_does_not_exist_message]}"
+            return f"Found: {result_ticket_does_not_exist.group()}\nTicket doesn't exist Count: {self.error[error_ticket_does_not_exist_message]}"
 
         elif result_failed_db_connection != None:
             matched_string = result_failed_db_connection.group()
 
             self.error_failed_db_connection_count += 1
 
-            self.error_count_dict[error_modified_message] = self.error_modified_count
-            self.error_count_dict[error_permission_denied_message] = self.error_permission_denied_count
-            self.error_count_dict[error_closed_ticket_message] = self.error_closed_ticket_count
-            self.error_count_dict[error_timeout_message] = self.error_timeout_count
-            self.error_count_dict[error_ticket_does_not_exist_message] = self.error_ticket_does_not_exist_count
-            self.error_count_dict[error_failed_connection_message] = self.error_failed_db_connection_count
+            self.error[error_modified_message] = self.error_modified_count
+            self.error[error_permission_denied_message] = self.error_permission_denied_count
+            self.error[error_closed_ticket_message] = self.error_closed_ticket_count
+            self.error[error_timeout_message] = self.error_timeout_count
+            self.error[error_ticket_does_not_exist_message] = self.error_ticket_does_not_exist_count
+            self.error[error_failed_connection_message] = self.error_failed_db_connection_count
 
-            return f"Found: {result_failed_db_connection.group()}\nTicket doesn't exist Count: {self.error_count_dict[error_failed_connection_message]}"
+            return f"Found: {result_failed_db_connection.group()}\nTicket doesn't exist Count: {self.error[error_failed_connection_message]}"
 
     def sorted_error_count(self):
-        sorted_dict = sorted(self.error_count_dict.items(), key=operator.itemgetter(1))
+        sorted_dict = sorted(self.error.items(), key=operator.itemgetter(1))
         #sorted_dict.insert(0,{"Error": "Count"})
         return sorted_dict
 
     def generate_csv(self):
         with open("error_message.csv", "w", newline="") as csvfile:
-            sorted_dict = sorted(self.error_count_dict.items(), key=operator.itemgetter(1), reverse=True)
+            sorted_dict = sorted(self.error.items(), key=operator.itemgetter(1), reverse=True)
             columns = ["Error", "Count"]
             writer = csv.writer(csvfile)
 
@@ -159,118 +151,3 @@ class ErrorCounter():
             writer.writerows(sorted_dict)
 
             csvfile.close()
-
-class UserLogCounter():
-    user_log_dict: dict = {}
-
-    def __int__(self):
-        self.user_log_dict = {}
-
-    # Searches line to check if it is reporting an error or not
-    def count_logs(self, line):
-
-        # RegEx pattern for log entries
-        date_host_application = r"(\w+ \d \d+:\d+:\d+ [a-z\.]+ [a-z:]+ )"
-        info_log = date_host_application + "(INFO).*"
-        error_log = date_host_application + "(ERROR).*"
-
-        # Grabs the username which should be in parentheses
-        user = r"\(\w+\)"
-
-        info_log_result  = re.search(info_log, line)
-        error_log_result = re.search(error_log, line)
-
-        user_result = re.search(user, line)
-
-        #print(f"{info_log_result}")
-        #print(f"{error_log_result}")
-        #print(f"{username}\n")
-
-        if user_result != None:
-            # Removes parentheses from the username
-            username = user_result.group()[1:]
-            username = username[:5]
-
-
-            try:
-                if self.user_log_dict[username]["INFO"] >= 0:
-                    pass
-                elif self.user_log_dict[username]["ERROR"] >= 0:
-                    pass
-                else:
-                    self.user_log_dict[username] = {}
-
-                    self.user_log_dict[username]["INFO"] = 0
-                    self.user_log_dict[username]["ERROR"] = 0
-            except KeyError as k:
-                self.user_log_dict[username] = {}
-
-                self.user_log_dict[username]["INFO"] = 0
-                self.user_log_dict[username]["ERROR"] = 0
-
-            if info_log_result != None:
-                if self.user_log_dict[username]["INFO"] >= 0:
-                    self.user_log_dict[username]["INFO"] += 1
-                else:
-                    self.user_log_dict[username]["INFO"] = 0
-                return self.user_log_dict
-
-            elif error_log_result != None:
-                if self.user_log_dict[username]["ERROR"] >= 0:
-                    self.user_log_dict[username]["ERROR"] += 1
-                else:
-                    self.user_log_dict[username]["ERROR"] = 0
-                return self.user_log_dict
-
-    def sorted_error_count(self):
-        sorted_dict = sorted(self.user_log_dict.items(), key=operator.itemgetter(0))
-        return sorted_dict
-
-    def generate_csv(self):
-        with open("user_log_count.csv", "w", newline="") as csvfile:
-            sorted_dict = sorted(self.user_log_dict, key=operator.itemgetter(0))
-            columns = ["Username", "INFO", "ERROR"]
-            writer = csv.writer(csvfile)
-
-            writer.writerow(columns)
-
-            written_array = []
-
-            for key in sorted_dict:
-                temp_array = [key, self.user_log_dict[key]["INFO"], self.user_log_dict[key]["ERROR"]]
-                print(f"Username INFO ERROR\n{key}\t\t{self.user_log_dict[key]['INFO']}\t{self.user_log_dict[key]['ERROR']}")
-                written_array.append(temp_array)
-
-            writer.writerows(written_array)
-
-            csvfile.close()
-
-if __name__ == "__main__":
-
-    error_counter = ErrorCounter()
-    user_log_counter = UserLogCounter()
-
-    '''print(error_counter.count_errors("Jul 6 14:01:23 ubuntu.local ticky: ERROR The ticket was modified while updating (user_1)"))      # Jul 6 14:01:23 pid:29440
-    print(f"{error_counter.sorted_error_count()}\n")
-    print(error_counter.count_errors("Jul 6 14:02:08 computer.name jam_tag=psim[29187]: (UUID:006)"))                         # Jul 6 14:02:08 pid:29187
-    print(f"{error_counter.sorted_error_count()}\n")
-    print(error_counter.count_errors("Jul 6 14:02:09 ubuntu.local ticky: ERROR Permission denied while closing the ticket (user_2)"))  # Jul 6 14:02:09 pid:29187
-    print(f"{error_counter.sorted_error_count()}\n")
-    print(error_counter.count_errors("Jul 6 14:03:01 ubuntu.local ticky: ERROR Permission denied while closing the ticket (user_1)"))  # Jul 6 14:03:01 pid:29440
-    print(f"{error_counter.sorted_error_count()}\n")
-    print(error_counter.count_errors("Jul 6 14:03:40 computer.name cacheclient[29807]: start syncing from \"0xDEADBEEF\""))   # Jul 6 14:03:40 pid:29807
-    print(f"{error_counter.sorted_error_count()}\n")
-    print(error_counter.count_errors("Jul 6 14:04:01 ubuntu.local ticky: ERROR Tried to add information to closed ticket (user_2)"))   # Jul 6 14:04:01 pid:29440
-    print(f"{error_counter.sorted_error_count()}\n")
-    print(error_counter.count_errors("Jul 6 14:05:01 computer.name CRON[29440]: USER (naughty_user)"))                        # Jul 6 14:05:01 pid:29440
-    print(f"{error_counter.sorted_error_count()}\n")
-
-    error_counter.generate_csv()'''
-
-    print(user_log_counter.count_logs("Jul 6 14:01:23 ubuntu.local ticky: ERROR The ticket was modified while updating (user1)"))      # Jul 6 14:01:23 pid:29440
-    print(user_log_counter.count_logs("Jul 6 14:02:09 ubuntu.local ticky: ERROR Permission denied while closing the ticket (user2)"))  # Jul 6 14:02:09 pid:29187
-    print(user_log_counter.count_logs("Jul 6 14:03:01 ubuntu.local ticky: ERROR Permission denied while closing the ticket (user1)"))  # Jul 6 14:03:01 pid:29440
-    print(user_log_counter.count_logs("Jul 6 14:03:40 computer.name cacheclient: INFO Commented on ticket (user3)"))                   # Jul 6 14:03:40 pid:29807
-    print(user_log_counter.count_logs("Jul 6 14:04:01 ubuntu.local ticky: ERROR Tried to add information to closed ticket (user2)"))   # Jul 6 14:04:01 pid:29440
-
-    user_log_counter.generate_csv()

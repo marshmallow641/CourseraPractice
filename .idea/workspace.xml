@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3ef1a1ec-f7a2-46e8-a918-ab1208c535a1" name="Changes" comment="Completed UserLogCounter class.">
+    <list default="true" id="3ef1a1ec-f7a2-46e8-a918-ab1208c535a1" name="Changes" comment="Completed generate_csv() function in the UserLogCounter class.">
+      <change afterPath="$PROJECT_DIR$/final_project/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/final_project/count_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/final_project/count_errors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/final_project/user_log_counts.py" beforeDir="false" afterPath="$PROJECT_DIR$/final_project/user_log_counts.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,7 +47,7 @@
       <recent name="C:\Users\marsh\PycharmProjects\pythonProject\tests" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.count_errors (1)">
+  <component name="RunManager" selected="Python.main (1)">
     <configuration name="change_filename" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="CourseraPractice" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -109,6 +111,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="main (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="CourseraPractice" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/final_project" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/final_project/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="CourseraPractice" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -144,27 +167,13 @@
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests in log_files_test.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="CourseraPractice" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;$PROJECT_DIR$/tests/log_files_test.py&quot;" />
-      <option name="_new_targetType" value="&quot;PATH&quot;" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.main (1)" />
         <item itemvalue="Python.count_errors (1)" />
         <item itemvalue="Python.count_errors" />
         <item itemvalue="Python.change_filename" />
         <item itemvalue="Python tests.Python tests in emails_test.py" />
-        <item itemvalue="Python tests.Python tests in log_files_test.py" />
       </list>
     </recent_temporary>
   </component>
@@ -191,12 +200,20 @@
       <option name="project" value="LOCAL" />
       <updated>1678154499561</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Completed generate_csv() function in the UserLogCounter class.">
+      <created>1678159439347</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1678159439347</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Started progress on UserLogCounter class." />
     <MESSAGE value="Completed UserLogCounter class." />
-    <option name="LAST_COMMIT_MESSAGE" value="Completed UserLogCounter class." />
+    <MESSAGE value="Completed generate_csv() function in the UserLogCounter class." />
+    <option name="LAST_COMMIT_MESSAGE" value="Completed generate_csv() function in the UserLogCounter class." />
   </component>
 </project>
