@@ -222,20 +222,28 @@ class UserLogCounter():
                     self.user_log_dict[username]["ERROR"] = 0
                 return self.user_log_dict
 
-        def sorted_error_count(self):
-            sorted_dict = sorted(self.user_log_dict.items(), key=operator.itemgetter(0))
-            return sorted_dict
+    def sorted_error_count(self):
+        sorted_dict = sorted(self.user_log_dict.items(), key=operator.itemgetter(0))
+        return sorted_dict
 
-        def generate_csv(self):
-            with open("error_message.csv", "w", newline="") as csvfile:
-                sorted_dict = sorted(self.user_log_dict.items(), key=operator.itemgetter(0))
-                columns = ["Username", "INFO", "ERROR"]
-                writer = csv.writer(csvfile)
+    def generate_csv(self):
+        with open("user_log_count.csv", "w", newline="") as csvfile:
+            sorted_dict = sorted(self.user_log_dict, key=operator.itemgetter(0))
+            columns = ["Username", "INFO", "ERROR"]
+            writer = csv.writer(csvfile)
 
-                writer.writerow(columns)
-                writer.writerows(sorted_dict)
+            writer.writerow(columns)
 
-                csvfile.close()
+            written_array = []
+
+            for key in sorted_dict:
+                temp_array = [key, self.user_log_dict[key]["INFO"], self.user_log_dict[key]["ERROR"]]
+                print(f"Username INFO ERROR\n{key}\t\t{self.user_log_dict[key]['INFO']}\t{self.user_log_dict[key]['ERROR']}")
+                written_array.append(temp_array)
+
+            writer.writerows(written_array)
+
+            csvfile.close()
 
 if __name__ == "__main__":
 
@@ -259,8 +267,10 @@ if __name__ == "__main__":
 
     error_counter.generate_csv()'''
 
-    print(user_log_counter.count_logs("Jul 6 14:01:23 ubuntu.local ticky: ERROR The ticket was modified while updating (user1)"))  # Jul 6 14:01:23 pid:29440
+    print(user_log_counter.count_logs("Jul 6 14:01:23 ubuntu.local ticky: ERROR The ticket was modified while updating (user1)"))      # Jul 6 14:01:23 pid:29440
     print(user_log_counter.count_logs("Jul 6 14:02:09 ubuntu.local ticky: ERROR Permission denied while closing the ticket (user2)"))  # Jul 6 14:02:09 pid:29187
     print(user_log_counter.count_logs("Jul 6 14:03:01 ubuntu.local ticky: ERROR Permission denied while closing the ticket (user1)"))  # Jul 6 14:03:01 pid:29440
-    print(user_log_counter.count_logs("Jul 6 14:03:40 computer.name cacheclient: INFO Commented on ticket (user3)"))  # Jul 6 14:03:40 pid:29807
-    print(user_log_counter.count_logs("Jul 6 14:04:01 ubuntu.local ticky: ERROR Tried to add information to closed ticket (user2)"))  # Jul 6 14:04:01 pid:29440
+    print(user_log_counter.count_logs("Jul 6 14:03:40 computer.name cacheclient: INFO Commented on ticket (user3)"))                   # Jul 6 14:03:40 pid:29807
+    print(user_log_counter.count_logs("Jul 6 14:04:01 ubuntu.local ticky: ERROR Tried to add information to closed ticket (user2)"))   # Jul 6 14:04:01 pid:29440
+
+    user_log_counter.generate_csv()
